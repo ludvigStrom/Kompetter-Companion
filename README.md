@@ -1,4 +1,4 @@
-# Kompetter-Companion
+# Kompetter Companion
 Companion app to the Kompetter-X macro keyboard (https://github.com/ludvigStrom/Kompetter-x).
 
 Linux requirements:
