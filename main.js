@@ -3,6 +3,8 @@ const HID = require('node-hid')
 const usbDetection = require('usb-detection')
 const os = require('os');
 const { exec } = require('child_process');
+const fs = require('fs');
+const { ipcMain } = require('electron');
 
 let tray = null
 
@@ -10,6 +12,7 @@ function createWindow () {
     let win = new BrowserWindow({
         width: 800,
         height: 600,
+        title: 'Kompetter Companion',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false, // This is required when using ipcRenderer without a preload script
@@ -25,6 +28,10 @@ function createWindow () {
         checkDevice(win);
     });
 
+    if (!fs.existsSync('layout.json')) {
+        fs.writeFileSync('layout.json', JSON.stringify({}), 'utf8');
+    }
+    
     fs.readFile('layout.json', (err, data) => {
         if (err) {
             console.error(err);
@@ -109,7 +116,6 @@ app.whenReady().then(() => {
     tray.setContextMenu(contextMenu)
 })
 
-const fs = require('fs');
 ipcMain.on('saveLayout', (event, layout) => {
     fs.writeFile('layout.json', JSON.stringify(layout), err => {
         if (err) {

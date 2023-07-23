@@ -38,9 +38,22 @@
         document.getElementById('layoutForm').addEventListener('submit', function(event) {
             event.preventDefault(); // prevent form from being submitted normally
             let layout = {
+                name: document.getElementById('name').value,
                 button1: document.getElementById('button1').value,
                 button2: document.getElementById('button2').value,
-                // add more fields for each button
+                button3: document.getElementById('button3').value,
+                button4: document.getElementById('button4').value,
+                button5: document.getElementById('button5').value,
+                button6: document.getElementById('button6').value,
+                button7: document.getElementById('button7').value,
+                button8: document.getElementById('button8').value,
+                button9: document.getElementById('button9').value,
+                button10: document.getElementById('button10').value,
+                button11: document.getElementById('button11').value,
+                button12: document.getElementById('button12').value,
+                button13: document.getElementById('button13').value,
+                button14: document.getElementById('button14').value,
+                button15: document.getElementById('button15').value,
             };
             ipcRenderer.send('saveLayout', layout);
         });
