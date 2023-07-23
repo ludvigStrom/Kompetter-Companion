@@ -24,6 +24,15 @@ function createWindow () {
     usbDetection.on('add', () => {
         checkDevice(win);
     });
+
+    fs.readFile('layout.json', (err, data) => {
+        if (err) {
+            console.error(err);
+        } else {
+            let layout = JSON.parse(data);
+            win.webContents.send('loadLayout', layout);
+        }
+    });
 }
 
 function checkDevice(win) {
@@ -99,3 +108,12 @@ app.whenReady().then(() => {
     tray.setToolTip('Kompetter-X Macro Keyboard Companion')
     tray.setContextMenu(contextMenu)
 })
+
+const fs = require('fs');
+ipcMain.on('saveLayout', (event, layout) => {
+    fs.writeFile('layout.json', JSON.stringify(layout), err => {
+        if (err) {
+            console.error(err);
+        }
+    });
+});
