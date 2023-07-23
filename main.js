@@ -63,26 +63,13 @@ function monitorActiveWindow(win) {
     }, 1000); // check every second
 }
 
+const activeWin = require('active-win');
 let activeWindowInfo;
-if (os.platform() === 'darwin') {
-    // macOS
-    const activeWin = require('active-win');
-
+if (os.platform() === 'darwin' || os.platform() === 'win32') {
+    // macOS and Windows
     activeWindowInfo = async function() {
         const activeWindow = await activeWin();
         return activeWindow.owner.name; // This should return the application name
-    };
-} else if (os.platform() === 'win32') {
-    // Windows
-    const { getActiveWindow } = require('node-process-windows');
-    activeWindowInfo = function(callback) {
-        getActiveWindow((err, window) => {
-            if (err) {
-                callback(err, null);
-            } else {
-                callback(null, window.process);
-            }
-        });
     };
 } else if (os.platform() === 'linux') {
     // Linux
