@@ -1,5 +1,6 @@
 const { app, Tray, Menu, BrowserWindow } = require('electron')
 const HID = require('node-hid')
+const usbDetection = require('usb-detection')
 
 let tray = null
 
@@ -15,6 +16,14 @@ function createWindow () {
 
     win.loadFile('index.html')
 
+    checkDevice(win);
+
+    usbDetection.on('add', () => {
+        checkDevice(win);
+    });
+}
+
+function checkDevice(win) {
     let devices = HID.devices()
     let deviceFound = false
 
@@ -40,6 +49,6 @@ app.whenReady().then(() => {
         { label: 'Exit', click: () => { app.quit() } }
     ])
 
-    tray.setToolTip('This is my application.')
+    tray.setToolTip('Kompetter-X Macro Keyboard Companion')
     tray.setContextMenu(contextMenu)
 })
