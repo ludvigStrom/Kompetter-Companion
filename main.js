@@ -92,10 +92,12 @@ function handleAppNameChange(appName, win) {
         let layout = layouts[appName];
         if (layout) {
             win.webContents.send('loadLayout', layout);
+        } else {
+            // Send an empty layout if a layout for the application doesn't exist
+            win.webContents.send('loadLayout', {});
         }
     }
 }
-
 
 const activeWin = require('active-win');
 let activeWindowInfo;
@@ -141,7 +143,10 @@ ipcMain.on('saveLayout', (event, layout) => {
             console.error(err);
         } else {
             // Parse the existing layouts
-            layouts = JSON.parse(data); // Update the layouts variable here
+            layouts = JSON.parse(data);
+
+            // Update the specific layout that's being saved
+            layouts[layout.appName] = layout.layout;
 
             // Write the updated layouts back to the file
             fs.writeFile('layout.json', JSON.stringify(layouts), err => {
