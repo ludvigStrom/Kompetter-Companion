@@ -15,7 +15,9 @@
     "electron-rebuild": "^3.2.9"
   },
   "dependencies": {
+    "active-win": "^8.1.0",
     "node-hid": "^2.1.2",
+    "node-process-windows": "^0.0.2",
     "usb-detection": "^4.14.2"
   }
 }

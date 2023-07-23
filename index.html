@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <h1>Test 123!</h1>
-    <h2 id="deviceStatus"></h2>
+    <p id="deviceStatus">Test</p></br></br>
+    <p id="activeWindow">Debug</p>
     <script>
         const { ipcRenderer } = require('electron')
-
-        ipcRenderer.on('deviceStatus', (event, status) => {
-            const deviceStatus = document.getElementById('deviceStatus')
-            deviceStatus.textContent = status
-        })
+    
+        ipcRenderer.on('activeWindow', (event, windowTitle) => {
+            document.getElementById('activeWindow').innerText = `Active window: ${windowTitle}`;
+        });
+    
+        ipcRenderer.on('deviceStatus', (event, deviceStatus) => {
+            document.getElementById('deviceStatus').innerText = `Device status: ${deviceStatus}`;
+        });
     </script>
 </body>
 </html>
