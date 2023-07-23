@@ -1,4 +1,7 @@
-const { app, BrowserWindow } = require('electron')
+const { app, Tray, Menu, BrowserWindow } = require('electron')
+const HID = require('node-hid')
+
+let tray = null
 
 function createWindow () {
     let win = new BrowserWindow({
@@ -6,10 +9,37 @@ function createWindow () {
         height: 600,
         webPreferences: {
             nodeIntegration: true,
+            contextIsolation: false, // This is required when using ipcRenderer without a preload script
         }
     })
 
     win.loadFile('index.html')
+
+    let devices = HID.devices()
+    let deviceFound = false
+
+    for (let device of devices) {
+        if (device.vendorId === 1452 && device.productId === 592) {
+            deviceFound = true
+            break
+        }
+    }
+
+    win.webContents.send('deviceStatus', deviceFound ? 'Kompetter-X Connected' : 'Kompetter-X not connected')
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+    createWindow()
+
+    tray = new Tray('images/kompetter_companion_logo.png')
+
+    const contextMenu = Menu.buildFromTemplate([
+        { label: 'Item1', type: 'radio' },
+        { label: 'Item2', type: 'radio' },
+        { type: 'separator' },
+        { label: 'Exit', click: () => { app.quit() } }
+    ])
+
+    tray.setToolTip('This is my application.')
+    tray.setContextMenu(contextMenu)
+})

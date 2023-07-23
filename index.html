@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <h1>Hello World!</h1>
+    <h1>Test 123!</h1>
+    <h2 id="deviceStatus"></h2>
+    <script>
+        const { ipcRenderer } = require('electron')
+
+        ipcRenderer.on('deviceStatus', (event, status) => {
+            const deviceStatus = document.getElementById('deviceStatus')
+            deviceStatus.textContent = status
+        })
+    </script>
 </body>
 </html>
