@@ -1,5 +1,5 @@
 # Kompetter-Companion
-Companion app to the Kompetter-X macro keyboard.
+Companion app to the Kompetter-X macro keyboard (https://github.com/ludvigStrom/Kompetter-x).
 
 Linux requirements:
 * xdotool. However, xdotool is a Linux command-line tool. To install it, you would need to use the package manager for your specific Linux distribution.
