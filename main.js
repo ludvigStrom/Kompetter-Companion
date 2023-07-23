@@ -45,15 +45,15 @@ function monitorActiveWindow(win) {
         try {
             if (os.platform() === 'darwin') {
                 // macOS
-                const window = await activeWindowInfo();
-                win.webContents.send('activeWindow', window.title);
+                const appName = await activeWindowInfo();
+                win.webContents.send('activeWindow', appName);
             } else {
                 // Windows and Linux
-                activeWindowInfo((err, window) => {
+                activeWindowInfo((err, appName) => {
                     if (err) {
                         console.error(err);
                     } else {
-                        win.webContents.send('activeWindow', window);
+                        win.webContents.send('activeWindow', appName);
                     }
                 });
             }
@@ -67,8 +67,10 @@ let activeWindowInfo;
 if (os.platform() === 'darwin') {
     // macOS
     const activeWin = require('active-win');
+
     activeWindowInfo = async function() {
-        return await activeWin();
+        const activeWindow = await activeWin();
+        return activeWindow.owner.name; // This should return the application name
     };
 } else if (os.platform() === 'win32') {
     // Windows
