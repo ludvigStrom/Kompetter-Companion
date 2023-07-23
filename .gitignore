@@ -1,0 +1,11 @@
+# .gitignore
+/node_modules
+/npm-debug.log*
+/dist/
+*.log
+*.bak
+*.swp
+*.sublime-project
+*.sublime-workspace
+.vscode/
+.DS_Store

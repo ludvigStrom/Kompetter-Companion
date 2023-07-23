@@ -1,0 +1,15 @@
+{
+  "name": "kompetter-companion",
+  "version": "0.1.0",
+  "description": "Companion app tp Kompetter-X macro keyboard",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^25.3.1"
+  }
+}
