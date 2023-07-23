@@ -10,9 +10,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^25.3.1"
+    "electron": "^25.3.1",
+    "electron-builder": "^24.4.0",
+    "electron-rebuild": "^3.2.9"
   },
   "dependencies": {
-    "node-hid": "^2.1.2"
+    "node-hid": "^2.1.2",
+    "usb-detection": "^4.14.2"
   }
 }
