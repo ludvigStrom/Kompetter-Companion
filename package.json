@@ -5,14 +5,32 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
-  "author": "",
+  "author": "Ludvig Ström",
   "license": "ISC",
-  "devDependencies": {
-    "electron": "^25.3.1",
-    "electron-builder": "^24.4.0",
-    "electron-rebuild": "^3.2.9"
+  "build": {
+    "appId": "com.kompetter.companion",
+    "productName": "Kompetter Companion",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": ["default", "dmg"],
+      "icon": "images/icon/mac/icon_mac.icns",
+      "extendInfo": {
+        "CFBundleDisplayName": "Kompetter Companion",
+        "CFBundleExecutable": "Kompetter Companion"
+      }
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "images/icon/win/icon_win.ico"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Utility",
+      "icon": "images/kompetter_companion_logo.png"
+    }
   },
   "dependencies": {
     "active-win": "^8.1.0",

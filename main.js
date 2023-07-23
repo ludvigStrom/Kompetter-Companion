@@ -7,6 +7,8 @@ const fs = require('fs');
 const { ipcMain } = require('electron');
 
 let tray = null
+let lastAppName = null;
+let layouts = {}; 
 
 function createWindow () {
     let win = new BrowserWindow({
@@ -36,8 +38,11 @@ function createWindow () {
         if (err) {
             console.error(err);
         } else {
-            let layout = JSON.parse(data);
-            win.webContents.send('loadLayout', layout);
+            layouts = JSON.parse(data); // Update the layouts variable here
+            let layout = layouts[lastAppName];
+            if (layout) {
+                win.webContents.send('loadLayout', layout);
+            }
         }
     });
 }
@@ -57,27 +62,40 @@ function checkDevice(win) {
 }
 
 function monitorActiveWindow(win) {
-    setInterval(async () => {
-        try {
-            if (os.platform() === 'darwin') {
-                // macOS
-                const appName = await activeWindowInfo();
-                win.webContents.send('activeWindow', appName);
-            } else {
-                // Windows and Linux
-                activeWindowInfo((err, appName) => {
-                    if (err) {
-                        console.error(err);
-                    } else {
-                        win.webContents.send('activeWindow', appName);
-                    }
+    setInterval(() => {
+        if (os.platform() === 'darwin') {
+            // macOS
+            activeWindowInfo()
+                .then(appName => {
+                    handleAppNameChange(appName, win);
+                })
+                .catch(err => {
+                    console.error(err);
                 });
-            }
-        } catch (err) {
-            console.error(err);
+        } else {
+            // Windows and Linux
+            activeWindowInfo((err, appName) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    handleAppNameChange(appName, win);
+                }
+            });
         }
     }, 1000); // check every second
 }
+
+function handleAppNameChange(appName, win) {
+    if (appName !== lastAppName && appName !== "Electron" && appName !== "Kompetter Companion") {
+        lastAppName = appName;
+        win.webContents.send('activeWindow', appName); // Send the active window name to the renderer process
+        let layout = layouts[appName];
+        if (layout) {
+            win.webContents.send('loadLayout', layout);
+        }
+    }
+}
+
 
 const activeWin = require('active-win');
 let activeWindowInfo;
@@ -117,9 +135,20 @@ app.whenReady().then(() => {
 })
 
 ipcMain.on('saveLayout', (event, layout) => {
-    fs.writeFile('layout.json', JSON.stringify(layout), err => {
+    // Read the existing contents of the file
+    fs.readFile('layout.json', (err, data) => {
         if (err) {
             console.error(err);
+        } else {
+            // Parse the existing layouts
+            layouts = JSON.parse(data); // Update the layouts variable here
+
+            // Write the updated layouts back to the file
+            fs.writeFile('layout.json', JSON.stringify(layouts), err => {
+                if (err) {
+                    console.error(err);
+                }
+            });
         }
     });
 });
