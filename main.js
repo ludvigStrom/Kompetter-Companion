@@ -22,7 +22,9 @@ function createWindow () {
         win = new BrowserWindow({
             width: 800,
             height: 600,
-            resizable: false,
+            //DEBUG
+            //resizable: false,
+            maximizable: false,
             title: 'Kompetter Companion',
             webPreferences: {
                 nodeIntegration: true,
@@ -31,6 +33,21 @@ function createWindow () {
         });
 
         win.loadFile('index.html');
+        //DEBUG
+/*
+        // Create a default menu
+        const menu = Menu.buildFromTemplate([
+            {
+                label: 'File',
+                submenu: [
+                    { role: 'quit' }
+                ]
+            },
+
+        ])
+
+        // Set the application menu
+        Menu.setApplicationMenu(menu);*/
 
         checkDevice(win);
         monitorActiveWindow(win);
@@ -89,6 +106,11 @@ app.whenReady().then(() => {
             createWindow();
         }
     })
+
+    if (app.dock) { // Check if the dock API is available (macOS only)
+        //DEBUG
+        //app.dock.hide(); // Hide the app from the dock
+    }
 })
 
 function checkDevice(win) {
