@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <p id="deviceStatus">Test</p></br></br>
-    <p id="activeWindow">Debug</p>
+    <p id="deviceStatus">Not connected</p></br></br>
+    <p id="activeWindow">Active window: ---</p>
 
     <form id="layoutForm">
         <input type="text" id="appName" placeholder="Application Name">
-        <input type="text" id="name" placeholder="Name">
         <input type="text" id="button1" placeholder="Button 1">
         <input type="text" id="button2" placeholder="Button 2">
         <input type="text" id="button3" placeholder="Button 3">
@@ -41,7 +40,6 @@
             let layout = {
                 appName: document.getElementById('appName').value,
                 layout: {
-                    name: document.getElementById('name').value,
                     button1: document.getElementById('button1').value,
                     button2: document.getElementById('button2').value,
                     button3: document.getElementById('button3').value,
@@ -62,24 +60,80 @@
             ipcRenderer.send('saveLayout', layout);
         });
 
-        ipcRenderer.on('loadLayout', (event, layout) => {
-            document.getElementById('name').value = layout.name;
-            document.getElementById('button1').value = layout.button1;
-            document.getElementById('button2').value = layout.button2;
-            document.getElementById('button3').value = layout.button3;
-            document.getElementById('button4').value = layout.button4;
-            document.getElementById('button5').value = layout.button5;
-            document.getElementById('button6').value = layout.button6;
-            document.getElementById('button7').value = layout.button7;
-            document.getElementById('button8').value = layout.button8;
-            document.getElementById('button9').value = layout.button9;
-            document.getElementById('button10').value = layout.button10;
-            document.getElementById('button11').value = layout.button11;
-            document.getElementById('button12').value = layout.button12;
-            document.getElementById('button13').value = layout.button13;
-            document.getElementById('button14').value = layout.button14;
-            document.getElementById('button15').value = layout.button15;
-        });
+        function handleKeydown(event) {
+            event.preventDefault();
+
+            let keyCombination = '';
+            let key = event.code.replace('Key', '');
+
+            if (event.ctrlKey) {
+                keyCombination += 'CONTROL + ';
+                key = key.replace('ControlLeft', '').replace('ControlRight', '');
+            }
+
+            if (event.shiftKey) {
+                keyCombination += 'SHIFT + ';
+                key = key.replace('ShiftLeft', '').replace('ShiftRight', '');
+            }
+
+            if (event.altKey) {
+                keyCombination += 'ALT + ';
+                key = key.replace('AltLeft', '').replace('AltRight', '');
+            }
+
+            if (event.metaKey) {
+                // macOS
+                if(navigator.platform.toUpperCase().indexOf('MAC')>=0) {
+                    keyCombination += 'CMD + ';
+                    key = key.replace('MetaLeft', '').replace('MetaRight', '');
+                } else {
+                    // Windows/Linux
+                    keyCombination += 'WIN + ';
+                    key = key.replace('MetaLeft', '').replace('MetaRight', '');
+                }
+            }
+
+            keyCombination += key;
+
+            this.value = keyCombination;
+        }
+
+        document.getElementById('button1').addEventListener('keydown', handleKeydown);
+        document.getElementById('button2').addEventListener('keydown', handleKeydown);
+        document.getElementById('button3').addEventListener('keydown', handleKeydown);
+        document.getElementById('button4').addEventListener('keydown', handleKeydown);
+        document.getElementById('button5').addEventListener('keydown', handleKeydown);
+        document.getElementById('button6').addEventListener('keydown', handleKeydown);
+        document.getElementById('button7').addEventListener('keydown', handleKeydown);
+        document.getElementById('button8').addEventListener('keydown', handleKeydown);
+        document.getElementById('button9').addEventListener('keydown', handleKeydown);
+        document.getElementById('button10').addEventListener('keydown', handleKeydown);
+        document.getElementById('button11').addEventListener('keydown', handleKeydown);
+        document.getElementById('button12').addEventListener('keydown', handleKeydown);
+        document.getElementById('button13').addEventListener('keydown', handleKeydown);
+        document.getElementById('button14').addEventListener('keydown', handleKeydown);
+        document.getElementById('button15').addEventListener('keydown', handleKeydown);
+
+
+        function handleFocus(event) {
+            this.value = '';
+        }
+
+        document.getElementById('button1').addEventListener('focus', handleFocus);
+        document.getElementById('button2').addEventListener('focus', handleFocus);
+        document.getElementById('button3').addEventListener('focus', handleFocus);
+        document.getElementById('button4').addEventListener('focus', handleFocus);
+        document.getElementById('button5').addEventListener('focus', handleFocus);
+        document.getElementById('button6').addEventListener('focus', handleFocus);
+        document.getElementById('button7').addEventListener('focus', handleFocus);
+        document.getElementById('button8').addEventListener('focus', handleFocus);
+        document.getElementById('button9').addEventListener('focus', handleFocus);
+        document.getElementById('button10').addEventListener('focus', handleFocus);
+        document.getElementById('button11').addEventListener('focus', handleFocus);
+        document.getElementById('button12').addEventListener('focus', handleFocus);
+        document.getElementById('button13').addEventListener('focus', handleFocus);
+        document.getElementById('button14').addEventListener('focus', handleFocus);
+        document.getElementById('button15').addEventListener('focus', handleFocus);
 
     </script>
 </body>
