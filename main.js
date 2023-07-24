@@ -107,25 +107,15 @@ function checkDevice(win) {
 
 function monitorActiveWindow(win) {
     setInterval(() => {
-        if (os.platform() === 'darwin') {
-            // macOS
-            activeWindowInfo()
-                .then(appName => {
-                    handleAppNameChange(appName, win);
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        } else {
-            // Windows and Linux
-            activeWindowInfo((err, appName) => {
-                if (err) {
-                    console.error(err);
-                } else {
-                    handleAppNameChange(appName, win);
-                }
+        // attempt to use the same Promise-based approach on all platforms
+        activeWindowInfo()
+            .then(appName => {
+                handleAppNameChange(appName, win);
+            })
+            .catch(err => {
+                console.log("Error getting active window");
+                console.error(err);
             });
-        }
     }, 1000); // check every second
 }
 
