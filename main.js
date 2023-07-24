@@ -15,6 +15,8 @@ let layouts = {};
 app.isQuitting = false;
 
 function createWindow () {
+    usbDetection.startMonitoring();
+
     // Check if a window is already open
     const allWindows = BrowserWindow.getAllWindows();
     if (allWindows.length === 0) {
@@ -36,6 +38,12 @@ function createWindow () {
         monitorActiveWindow(win);
 
         usbDetection.on('add', () => {
+            setTimeout(() => {
+                checkDevice(win);
+            }, 500);
+        });
+
+        usbDetection.on('remove', () => {
             checkDevice(win);
         });
 
@@ -96,7 +104,7 @@ function checkDevice(win) {
     let deviceFound = false
 
     for (let device of devices) {
-        if (device.vendorId === 1452 && device.productId === 592) {
+        if (device.vendorId === 1155 && device.productId === 22315) {
             deviceFound = true
             break
         }
