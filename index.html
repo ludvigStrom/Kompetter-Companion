@@ -198,69 +198,16 @@
             this.value = keyCombination;
         }
 
-        document.getElementById('button1').addEventListener('keydown', handleKeydown);
-        document.getElementById('button2').addEventListener('keydown', handleKeydown);
-        document.getElementById('button3').addEventListener('keydown', handleKeydown);
-        document.getElementById('button4').addEventListener('keydown', handleKeydown);
-        document.getElementById('button5').addEventListener('keydown', handleKeydown);
-        document.getElementById('button6').addEventListener('keydown', handleKeydown);
-        document.getElementById('button7').addEventListener('keydown', handleKeydown);
-        document.getElementById('button8').addEventListener('keydown', handleKeydown);
-        document.getElementById('button9').addEventListener('keydown', handleKeydown);
-        document.getElementById('button10').addEventListener('keydown', handleKeydown);
-        document.getElementById('button11').addEventListener('keydown', handleKeydown);
-        document.getElementById('button12').addEventListener('keydown', handleKeydown);
-        document.getElementById('button13').addEventListener('keydown', handleKeydown);
-        document.getElementById('button14').addEventListener('keydown', handleKeydown);
-        document.getElementById('button15').addEventListener('keydown', handleKeydown);
-        document.getElementById('button16').addEventListener('keydown', handleKeydown);
-
-
         function handleFocus(event) {
             this.dataset.oldValue = this.value; // Store the old value
             this.value = '';
         }
-
-        document.getElementById('button1').addEventListener('focus', handleFocus);
-        document.getElementById('button2').addEventListener('focus', handleFocus);
-        document.getElementById('button3').addEventListener('focus', handleFocus);
-        document.getElementById('button4').addEventListener('focus', handleFocus);
-        document.getElementById('button5').addEventListener('focus', handleFocus);
-        document.getElementById('button6').addEventListener('focus', handleFocus);
-        document.getElementById('button7').addEventListener('focus', handleFocus);
-        document.getElementById('button8').addEventListener('focus', handleFocus);
-        document.getElementById('button9').addEventListener('focus', handleFocus);
-        document.getElementById('button10').addEventListener('focus', handleFocus);
-        document.getElementById('button11').addEventListener('focus', handleFocus);
-        document.getElementById('button12').addEventListener('focus', handleFocus);
-        document.getElementById('button13').addEventListener('focus', handleFocus);
-        document.getElementById('button14').addEventListener('focus', handleFocus);
-        document.getElementById('button15').addEventListener('focus', handleFocus);
-        document.getElementById('button16').addEventListener('focus', handleFocus);
 
         function handleBlur(event) {
             if (this.value === '') {
                 this.value = this.dataset.oldValue; // Restore the old value if the field is left empty
             }
         }
-
-        // Add event listeners for the blur event
-        document.getElementById('button1').addEventListener('blur', handleBlur);
-        document.getElementById('button2').addEventListener('blur', handleBlur);
-        document.getElementById('button3').addEventListener('blur', handleBlur);
-        document.getElementById('button4').addEventListener('blur', handleBlur);
-        document.getElementById('button5').addEventListener('blur', handleBlur);
-        document.getElementById('button6').addEventListener('blur', handleBlur);
-        document.getElementById('button7').addEventListener('blur', handleBlur);
-        document.getElementById('button8').addEventListener('blur', handleBlur);
-        document.getElementById('button9').addEventListener('blur', handleBlur);
-        document.getElementById('button10').addEventListener('blur', handleBlur);
-        document.getElementById('button11').addEventListener('blur', handleBlur);
-        document.getElementById('button12').addEventListener('blur', handleBlur);
-        document.getElementById('button13').addEventListener('blur', handleBlur);
-        document.getElementById('button14').addEventListener('blur', handleBlur);
-        document.getElementById('button15').addEventListener('blur', handleBlur);
-        document.getElementById('button16').addEventListener('blur', handleBlur);
 
         ipcRenderer.on('loadLayout', (event, layout) => {
             document.getElementById('button1').value = layout.button1 || '';
@@ -281,6 +228,44 @@
             document.getElementById('button16').value = layout.button16 || '';
         });
 
+        function saveLayout() {
+            console.log('saveLayout called'); // Debugging line
+            let layout = {
+                appName: document.getElementById('appName').value,
+                layout: {
+                    button1: document.getElementById('button1').value,
+                    button2: document.getElementById('button2').value,
+                    button3: document.getElementById('button3').value,
+                    button4: document.getElementById('button4').value,
+                    button5: document.getElementById('button5').value,
+                    button6: document.getElementById('button6').value,
+                    button7: document.getElementById('button7').value,
+                    button8: document.getElementById('button8').value,
+                    button9: document.getElementById('button9').value,
+                    button10: document.getElementById('button10').value,
+                    button11: document.getElementById('button11').value,
+                    button12: document.getElementById('button12').value,
+                    button13: document.getElementById('button13').value,
+                    button14: document.getElementById('button14').value,
+                    button15: document.getElementById('button15').value,
+                    button16: document.getElementById('button16').value,
+                }
+            };
+            ipcRenderer.send('saveLayout', layout);
+        }
+
+        for (let i = 1; i <= 16; i++) {
+            // Get the button element
+            let button = document.getElementById(`button${i}`);
+
+            // Add the event listeners
+            button.addEventListener('keydown', handleKeydown);
+            button.addEventListener('focus', handleFocus);
+            button.addEventListener('blur', handleBlur);
+            button.addEventListener('input', saveLayout);
+        }
     </script>
+
+
 </body>
 </html>
