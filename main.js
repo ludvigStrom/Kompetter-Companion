@@ -149,7 +149,8 @@ if (os.platform() === 'darwin' || os.platform() === 'win32') {
     // macOS and Windows
     activeWindowInfo = async function() {
         const activeWindow = await activeWin();
-        return activeWindow.owner.name; // This should return the application name
+        // Check if activeWindow is not null before trying to access its owner property
+        return activeWindow ? activeWindow.owner.name : null; // This should return the application name
     };
 } else if (os.platform() === 'linux') {
     // Linux
@@ -163,21 +164,6 @@ if (os.platform() === 'darwin' || os.platform() === 'win32') {
         });
     };
 }
-/*
-app.whenReady().then(() => {
-    createWindow()
-
-    tray = new Tray('images/icon/mac/kompetter_tray_icon.png')
-
-    const contextMenu = Menu.buildFromTemplate([
-        { label: 'Open', click: () => { createWindow() } },
-        { type: 'separator' },
-        { label: 'Exit', click: () => { app.quit() } }
-    ])
-
-    tray.setToolTip('Kompetter-X Macro Keyboard Companion')
-    tray.setContextMenu(contextMenu)
-})*/
 
 ipcMain.on('saveLayout', (event, layout) => {
     // Read the existing contents of the file
