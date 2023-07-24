@@ -12,6 +12,7 @@
         box-sizing: border-box;
         font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
         background-color: #1e1e1e;
+        user-select: none; /* Prevent text selection */
     }
 
     #content {
@@ -47,7 +48,6 @@
         width: calc(20% - 10px);
         margin-bottom: 20px;
         caret-color: transparent; /* Hide the blinking cursor */
-        user-select: text; /* Allow text selection in input fields */
     }
 
     #layoutForm button {
@@ -104,6 +104,7 @@
             <input type="text" id="button13" placeholder="Button 13">
             <input type="text" id="button14" placeholder="Button 14">
             <input type="text" id="button15" placeholder="Button 15">
+            <input type="text" id="button16" placeholder="Button 16">
             
             <button type="submit">Save</button>
             
@@ -147,52 +148,11 @@
                     button13: document.getElementById('button13').value,
                     button14: document.getElementById('button14').value,
                     button15: document.getElementById('button15').value,
+                    button16: document.getElementById('button16').value,
                 }
             };
             ipcRenderer.send('saveLayout', layout);
         });
-/*
-        let inputs = document.querySelectorAll('#layoutForm input');
-        let saveButton = document.querySelector('#layoutForm button');
-
-        // Initially disable the save button
-        saveButton.disabled = true;
-
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
-                // Enable the save button when a change is detected
-                saveButton.disabled = false;
-            });
-        });
-
-        document.getElementById('layoutForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // prevent form from being submitted normally
-
-            let layout = {
-                appName: document.getElementById('appName').value,
-                layout: {
-                    button1: document.getElementById('button1').value,
-                    button2: document.getElementById('button2').value,
-                    button3: document.getElementById('button3').value,
-                    button4: document.getElementById('button4').value,
-                    button5: document.getElementById('button5').value,
-                    button6: document.getElementById('button6').value,
-                    button7: document.getElementById('button7').value,
-                    button8: document.getElementById('button8').value,
-                    button9: document.getElementById('button9').value,
-                    button10: document.getElementById('button10').value,
-                    button11: document.getElementById('button11').value,
-                    button12: document.getElementById('button12').value,
-                    button13: document.getElementById('button13').value,
-                    button14: document.getElementById('button14').value,
-                    button15: document.getElementById('button15').value,
-                }
-            };
-            ipcRenderer.send('saveLayout', layout);
-
-            // Disable the save button again after form submission
-            saveButton.disabled = true;
-        });*/
 
         function handleKeydown(event) {
 
@@ -207,28 +167,28 @@
             let key = event.code.replace('Key', '');
 
             if (event.ctrlKey) {
-                keyCombination += 'CTRL + ';
+                keyCombination += 'Ctrl + ';
                 key = key.replace('ControlLeft', '').replace('ControlRight', '');
             }
 
             if (event.shiftKey) {
-                keyCombination += 'SHIFT + ';
+                keyCombination += 'Shift + ';
                 key = key.replace('ShiftLeft', '').replace('ShiftRight', '');
             }
 
             if (event.altKey) {
-                keyCombination += 'ALT + ';
+                keyCombination += 'Alt + ';
                 key = key.replace('AltLeft', '').replace('AltRight', '');
             }
 
             if (event.metaKey) {
                 // macOS
                 if(navigator.platform.toUpperCase().indexOf('MAC')>=0) {
-                    keyCombination += 'CMD + ';
+                    keyCombination += 'Cmd + ';
                     key = key.replace('MetaLeft', '').replace('MetaRight', '');
                 } else {
                     // Windows/Linux
-                    keyCombination += 'WIN + ';
+                    keyCombination += 'Win + ';
                     key = key.replace('MetaLeft', '').replace('MetaRight', '');
                 }
             }
@@ -253,6 +213,7 @@
         document.getElementById('button13').addEventListener('keydown', handleKeydown);
         document.getElementById('button14').addEventListener('keydown', handleKeydown);
         document.getElementById('button15').addEventListener('keydown', handleKeydown);
+        document.getElementById('button16').addEventListener('keydown', handleKeydown);
 
 
         function handleFocus(event) {
@@ -275,6 +236,7 @@
         document.getElementById('button13').addEventListener('focus', handleFocus);
         document.getElementById('button14').addEventListener('focus', handleFocus);
         document.getElementById('button15').addEventListener('focus', handleFocus);
+        document.getElementById('button16').addEventListener('focus', handleFocus);
 
         function handleBlur(event) {
             if (this.value === '') {
@@ -298,6 +260,7 @@
         document.getElementById('button13').addEventListener('blur', handleBlur);
         document.getElementById('button14').addEventListener('blur', handleBlur);
         document.getElementById('button15').addEventListener('blur', handleBlur);
+        document.getElementById('button16').addEventListener('blur', handleBlur);
 
         ipcRenderer.on('loadLayout', (event, layout) => {
             document.getElementById('button1').value = layout.button1 || '';
@@ -315,6 +278,7 @@
             document.getElementById('button13').value = layout.button13 || '';
             document.getElementById('button14').value = layout.button14 || '';
             document.getElementById('button15').value = layout.button15 || '';
+            document.getElementById('button16').value = layout.button16 || '';
         });
 
     </script>

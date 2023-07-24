@@ -6,13 +6,15 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const { ipcMain } = require('electron');
 
-let tray = null
+
+let win;
+let tray = null;
 let lastAppName = null;
 let layouts = {}; 
 
-function createWindow () {
-    let win;
+app.isQuitting = false;
 
+function createWindow () {
     // Check if a window is already open
     const allWindows = BrowserWindow.getAllWindows();
     if (allWindows.length === 0) {
@@ -20,6 +22,7 @@ function createWindow () {
         win = new BrowserWindow({
             width: 800,
             height: 600,
+            resizable: false,
             title: 'Kompetter Companion',
             webPreferences: {
                 nodeIntegration: true,
@@ -51,12 +54,42 @@ function createWindow () {
                 }
             }
         });
+
+        win.on('close', (event) => {
+            if (!app.isQuitting) {
+                event.preventDefault();
+                win.hide();
+            } else {
+                win = null; // dereference the window object
+            }
+        });
     } else {
         // A window is already open, so focus on it
         win = allWindows[0];
         win.focus();
     }
 }
+
+app.on('before-quit', () => {
+    app.isQuitting = true;
+});
+
+app.whenReady().then(() => {
+    createWindow()
+
+    tray = new Tray('images/icon/mac/kompetter_tray_icon.png')
+
+    tray.setToolTip('Kompetter-X Macro Keyboard Companion')
+
+        // Add a click event listener to the tray icon
+        tray.on('click', () => {
+        if (win) {
+            win.show();
+        } else {
+            createWindow();
+        }
+    })
+})
 
 function checkDevice(win) {
     let devices = HID.devices()
@@ -130,7 +163,7 @@ if (os.platform() === 'darwin' || os.platform() === 'win32') {
         });
     };
 }
-
+/*
 app.whenReady().then(() => {
     createWindow()
 
@@ -144,7 +177,7 @@ app.whenReady().then(() => {
 
     tray.setToolTip('Kompetter-X Macro Keyboard Companion')
     tray.setContextMenu(contextMenu)
-})
+})*/
 
 ipcMain.on('saveLayout', (event, layout) => {
     // Read the existing contents of the file
