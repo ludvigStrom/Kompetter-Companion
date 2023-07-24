@@ -11,40 +11,51 @@ let lastAppName = null;
 let layouts = {}; 
 
 function createWindow () {
-    let win = new BrowserWindow({
-        width: 800,
-        height: 600,
-        title: 'Kompetter Companion',
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false, // This is required when using ipcRenderer without a preload script
-        }
-    })
+    let win;
 
-    win.loadFile('index.html')
-
-    checkDevice(win);
-    monitorActiveWindow(win);
-
-    usbDetection.on('add', () => {
-        checkDevice(win);
-    });
-
-    if (!fs.existsSync('layout.json')) {
-        fs.writeFileSync('layout.json', JSON.stringify({}), 'utf8');
-    }
-    
-    fs.readFile('layout.json', (err, data) => {
-        if (err) {
-            console.error(err);
-        } else {
-            layouts = JSON.parse(data); // Update the layouts variable here
-            let layout = layouts[lastAppName];
-            if (layout) {
-                win.webContents.send('loadLayout', layout);
+    // Check if a window is already open
+    const allWindows = BrowserWindow.getAllWindows();
+    if (allWindows.length === 0) {
+        // No window is open, so create a new one
+        win = new BrowserWindow({
+            width: 800,
+            height: 600,
+            title: 'Kompetter Companion',
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false, // This is required when using ipcRenderer without a preload script
             }
+        });
+
+        win.loadFile('index.html');
+
+        checkDevice(win);
+        monitorActiveWindow(win);
+
+        usbDetection.on('add', () => {
+            checkDevice(win);
+        });
+
+        if (!fs.existsSync('layout.json')) {
+            fs.writeFileSync('layout.json', JSON.stringify({}), 'utf8');
         }
-    });
+
+        fs.readFile('layout.json', (err, data) => {
+            if (err) {
+                console.error(err);
+            } else {
+                layouts = JSON.parse(data); // Update the layouts variable here
+                let layout = layouts[lastAppName];
+                if (layout) {
+                    win.webContents.send('loadLayout', layout);
+                }
+            }
+        });
+    } else {
+        // A window is already open, so focus on it
+        win = allWindows[0];
+        win.focus();
+    }
 }
 
 function checkDevice(win) {
@@ -123,11 +134,10 @@ if (os.platform() === 'darwin' || os.platform() === 'win32') {
 app.whenReady().then(() => {
     createWindow()
 
-    tray = new Tray('images/kompetter_companion_logo.png')
+    tray = new Tray('images/icon/mac/kompetter_tray_icon.png')
 
     const contextMenu = Menu.buildFromTemplate([
-        { label: 'Item1', type: 'radio' },
-        { label: 'Item2', type: 'radio' },
+        { label: 'Open', click: () => { createWindow() } },
         { type: 'separator' },
         { label: 'Exit', click: () => { app.quit() } }
     ])

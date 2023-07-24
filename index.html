@@ -1,34 +1,126 @@
 <!DOCTYPE html>
 <html>
-<body>
-    <p id="deviceStatus">Not connected</p></br></br>
-    <p id="activeWindow">Active window: ---</p>
 
-    <form id="layoutForm">
-        <input type="text" id="appName" placeholder="Application Name">
-        <input type="text" id="button1" placeholder="Button 1">
-        <input type="text" id="button2" placeholder="Button 2">
-        <input type="text" id="button3" placeholder="Button 3">
-        <input type="text" id="button4" placeholder="Button 4">
-        <input type="text" id="button5" placeholder="Button 5">
-        <input type="text" id="button6" placeholder="Button 6">
-        <input type="text" id="button7" placeholder="Button 7">
-        <input type="text" id="button8" placeholder="Button 8">
-        <input type="text" id="button9" placeholder="Button 9">
-        <input type="text" id="button10" placeholder="Button 10">
-        <input type="text" id="button11" placeholder="Button 11">
-        <input type="text" id="button12" placeholder="Button 12">
-        <input type="text" id="button13" placeholder="Button 13">
-        <input type="text" id="button14" placeholder="Button 14">
-        <input type="text" id="button15" placeholder="Button 15">
-        <button type="submit">Save</button>
-    </form>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+        background-color: #1e1e1e;
+    }
+
+    #content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 800px;
+        padding: 30px;
+        color: #d4d4d4;
+    }
+
+    #deviceStatus, #activeWindow {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    #layoutForm {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    #layoutForm input {
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #555555;
+        border-radius: 5px;
+        background-color: #252526;
+        color: #d4d4d4;
+        width: calc(20% - 10px);
+        margin-bottom: 20px;
+        caret-color: transparent; /* Hide the blinking cursor */
+        user-select: text; /* Allow text selection in input fields */
+    }
+
+    #layoutForm button {
+        padding: 10px;
+        font-size: 14px;
+        background-color: #007acc;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+        width: 100%; /* Make the button take up 100% width */
+        order: 2; /* Move the button to the end of the flex container */
+    }
+
+    #layoutForm button:disabled {
+        background-color: #555555;
+        cursor: not-allowed;
+    }
+
+    #layoutForm button:hover {
+        background-color: #0096f1;
+    }
+
+    #appName {
+        width: 100%;
+        margin-bottom: 20px;
+        user-select: none; /* Prevent text selection */
+        display: none; /* Hide the input field */
+    }
+</style>
+
+<body>
+    <div id="content">
+            
+        <p id="deviceStatus">Not connected</p>
+        <p id="activeWindow">Active window: ---</p>
+
+        <form id="layoutForm">
+            <input type="text" id="appName" placeholder="Application Name" readonly>
+            <input type="text" id="button1" placeholder="Button 1">
+            <input type="text" id="button2" placeholder="Button 2">
+            <input type="text" id="button3" placeholder="Button 3">
+            <input type="text" id="button4" placeholder="Button 4">
+            <input type="text" id="button5" placeholder="Button 5">
+            <input type="text" id="button6" placeholder="Button 6">
+            <input type="text" id="button7" placeholder="Button 7">
+            <input type="text" id="button8" placeholder="Button 8">
+            <input type="text" id="button9" placeholder="Button 9">
+            <input type="text" id="button10" placeholder="Button 10">
+            <input type="text" id="button11" placeholder="Button 11">
+            <input type="text" id="button12" placeholder="Button 12">
+            <input type="text" id="button13" placeholder="Button 13">
+            <input type="text" id="button14" placeholder="Button 14">
+            <input type="text" id="button15" placeholder="Button 15">
+            
+            <button type="submit">Save</button>
+            
+        </form>
+
+    </div>
 
     <script>
         const { ipcRenderer } = require('electron')
     
         ipcRenderer.on('activeWindow', (event, windowTitle) => {
             document.getElementById('activeWindow').innerText = `Active window: ${windowTitle}`;
+        });
+
+        ipcRenderer.on('activeWindow', (event, windowTitle) => {
+            document.getElementById('activeWindow').innerText = `Active window: ${windowTitle}`;
+            document.getElementById('appName').value = windowTitle; // Set the value of the appName input field
         });
     
         ipcRenderer.on('deviceStatus', (event, deviceStatus) => {
@@ -59,15 +151,63 @@
             };
             ipcRenderer.send('saveLayout', layout);
         });
+/*
+        let inputs = document.querySelectorAll('#layoutForm input');
+        let saveButton = document.querySelector('#layoutForm button');
+
+        // Initially disable the save button
+        saveButton.disabled = true;
+
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                // Enable the save button when a change is detected
+                saveButton.disabled = false;
+            });
+        });
+
+        document.getElementById('layoutForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // prevent form from being submitted normally
+
+            let layout = {
+                appName: document.getElementById('appName').value,
+                layout: {
+                    button1: document.getElementById('button1').value,
+                    button2: document.getElementById('button2').value,
+                    button3: document.getElementById('button3').value,
+                    button4: document.getElementById('button4').value,
+                    button5: document.getElementById('button5').value,
+                    button6: document.getElementById('button6').value,
+                    button7: document.getElementById('button7').value,
+                    button8: document.getElementById('button8').value,
+                    button9: document.getElementById('button9').value,
+                    button10: document.getElementById('button10').value,
+                    button11: document.getElementById('button11').value,
+                    button12: document.getElementById('button12').value,
+                    button13: document.getElementById('button13').value,
+                    button14: document.getElementById('button14').value,
+                    button15: document.getElementById('button15').value,
+                }
+            };
+            ipcRenderer.send('saveLayout', layout);
+
+            // Disable the save button again after form submission
+            saveButton.disabled = true;
+        });*/
 
         function handleKeydown(event) {
+
+            if (event.key === 'Delete') {
+                this.value = '';
+                return; // Stop executing the rest of the function
+            }
+
             event.preventDefault();
 
             let keyCombination = '';
             let key = event.code.replace('Key', '');
 
             if (event.ctrlKey) {
-                keyCombination += 'CONTROL + ';
+                keyCombination += 'CTRL + ';
                 key = key.replace('ControlLeft', '').replace('ControlRight', '');
             }
 
@@ -116,6 +256,7 @@
 
 
         function handleFocus(event) {
+            this.dataset.oldValue = this.value; // Store the old value
             this.value = '';
         }
 
@@ -134,6 +275,47 @@
         document.getElementById('button13').addEventListener('focus', handleFocus);
         document.getElementById('button14').addEventListener('focus', handleFocus);
         document.getElementById('button15').addEventListener('focus', handleFocus);
+
+        function handleBlur(event) {
+            if (this.value === '') {
+                this.value = this.dataset.oldValue; // Restore the old value if the field is left empty
+            }
+        }
+
+        // Add event listeners for the blur event
+        document.getElementById('button1').addEventListener('blur', handleBlur);
+        document.getElementById('button2').addEventListener('blur', handleBlur);
+        document.getElementById('button3').addEventListener('blur', handleBlur);
+        document.getElementById('button4').addEventListener('blur', handleBlur);
+        document.getElementById('button5').addEventListener('blur', handleBlur);
+        document.getElementById('button6').addEventListener('blur', handleBlur);
+        document.getElementById('button7').addEventListener('blur', handleBlur);
+        document.getElementById('button8').addEventListener('blur', handleBlur);
+        document.getElementById('button9').addEventListener('blur', handleBlur);
+        document.getElementById('button10').addEventListener('blur', handleBlur);
+        document.getElementById('button11').addEventListener('blur', handleBlur);
+        document.getElementById('button12').addEventListener('blur', handleBlur);
+        document.getElementById('button13').addEventListener('blur', handleBlur);
+        document.getElementById('button14').addEventListener('blur', handleBlur);
+        document.getElementById('button15').addEventListener('blur', handleBlur);
+
+        ipcRenderer.on('loadLayout', (event, layout) => {
+            document.getElementById('button1').value = layout.button1 || '';
+            document.getElementById('button2').value = layout.button2 || '';
+            document.getElementById('button3').value = layout.button3 || '';
+            document.getElementById('button4').value = layout.button4 || '';
+            document.getElementById('button5').value = layout.button5 || '';
+            document.getElementById('button6').value = layout.button6 || '';
+            document.getElementById('button7').value = layout.button7 || '';
+            document.getElementById('button8').value = layout.button8 || '';
+            document.getElementById('button9').value = layout.button9 || '';
+            document.getElementById('button10').value = layout.button10 || '';
+            document.getElementById('button11').value = layout.button11 || '';
+            document.getElementById('button12').value = layout.button12 || '';
+            document.getElementById('button13').value = layout.button13 || '';
+            document.getElementById('button14').value = layout.button14 || '';
+            document.getElementById('button15').value = layout.button15 || '';
+        });
 
     </script>
 </body>
