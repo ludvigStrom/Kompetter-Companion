@@ -15,6 +15,8 @@ let layouts = {};
 app.isQuitting = false;
 
 function createWindow () {
+    usbDetection.startMonitoring();
+
     // Check if a window is already open
     const allWindows = BrowserWindow.getAllWindows();
     if (allWindows.length === 0) {
@@ -53,6 +55,12 @@ function createWindow () {
         monitorActiveWindow(win);
 
         usbDetection.on('add', () => {
+            setTimeout(() => {
+                checkDevice(win);
+            }, 500);
+        });
+
+        usbDetection.on('remove', () => {
             checkDevice(win);
         });
 
@@ -118,7 +126,7 @@ function checkDevice(win) {
     let deviceFound = false
 
     for (let device of devices) {
-        if (device.vendorId === 1452 && device.productId === 592) {
+        if (device.vendorId === 1155 && device.productId === 22315) {
             deviceFound = true
             break
         }
@@ -129,25 +137,15 @@ function checkDevice(win) {
 
 function monitorActiveWindow(win) {
     setInterval(() => {
-        if (os.platform() === 'darwin') {
-            // macOS
-            activeWindowInfo()
-                .then(appName => {
-                    handleAppNameChange(appName, win);
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        } else {
-            // Windows and Linux
-            activeWindowInfo((err, appName) => {
-                if (err) {
-                    console.error(err);
-                } else {
-                    handleAppNameChange(appName, win);
-                }
+        // attempt to use the same Promise-based approach on all platforms
+        activeWindowInfo()
+            .then(appName => {
+                handleAppNameChange(appName, win);
+            })
+            .catch(err => {
+                console.log("Error getting active window");
+                console.error(err);
             });
-        }
     }, 1000); // check every second
 }
 

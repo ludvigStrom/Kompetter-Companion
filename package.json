@@ -15,11 +15,19 @@
     "productName": "Kompetter Companion",
     "mac": {
       "category": "public.app-category.utilities",
-      "target": ["default", "dmg"],
+      "target": [
+        "default",
+        "dmg"
+      ],
       "icon": "images/icon/mac/icon_mac.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist",
       "extendInfo": {
         "CFBundleDisplayName": "Kompetter Companion",
-        "CFBundleExecutable": "Kompetter Companion"
+        "CFBundleExecutable": "Kompetter Companion",
+        "NSAppleEventsUsageDescription": "Please allow access to script browser applications to detect the current URL when triggering instant lookup."
       }
     },
     "win": {
@@ -27,7 +35,10 @@
       "icon": "images/icon/win/icon_win.ico"
     },
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "category": "Utility",
       "icon": "images/kompetter_companion_logo.png"
     }
@@ -37,5 +48,9 @@
     "node-hid": "^2.1.2",
     "node-process-windows": "^0.0.2",
     "usb-detection": "^4.14.2"
+  },
+  "devDependencies": {
+    "electron": "^25.3.1",
+    "electron-rebuild": "^3.2.9"
   }
 }
