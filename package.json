@@ -20,9 +20,14 @@
         "dmg"
       ],
       "icon": "images/icon/mac/icon_mac.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "entitlements.mac.plist",
+      "entitlementsInherit": "entitlements.mac.plist",
       "extendInfo": {
         "CFBundleDisplayName": "Kompetter Companion",
-        "CFBundleExecutable": "Kompetter Companion"
+        "CFBundleExecutable": "Kompetter Companion",
+        "NSAppleEventsUsageDescription": "Please allow access to script browser applications to detect the current URL when triggering instant lookup."
       }
     },
     "win": {
