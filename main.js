@@ -59,7 +59,6 @@ function createWindow () {
                 checkDevice(win);
             }, 500);
         });
-
         usbDetection.on('remove', () => {
             checkDevice(win);
         });
