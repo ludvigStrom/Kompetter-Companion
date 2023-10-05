@@ -50,7 +50,7 @@
     "usb-detection": "^4.14.2"
   },
   "devDependencies": {
-    "electron": "^25.3.1",
+    "electron": "^25.8.4",
     "electron-rebuild": "^3.2.9"
   }
 }
